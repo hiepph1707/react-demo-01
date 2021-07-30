@@ -52,7 +52,7 @@ pipeline {
             agent {label 'master'}
             steps {
                 sh """
-                    sed -e "s|PROJECT_NAME|${PROJECT_NAME}|g; s|PORT|${PORT}|g; s|POD_LABEL|${POD_LABEL}|g; s|REGISTRY|${DOCKER_REGISTRY}|g; s|TAG|${IMAGE_TAG}|g" manifest.yml > manifest-new.yml
+                    sed -e "s|PROJECT_NAME|${PROJECT_NAME}|g; s|PORT|${PORT}|g; s|POD_LABEL|${POD_LABEL}|g; s|REGISTRY|${DOCKER_REGISTRY}|g; s|TAG|${IMAGE_TAG}|g; s|PUBLIC_DOMAIN|${PUBLIC_DOMAIN}|g" manifest.yml > manifest-new.yml
                 """
 
                 step([$class: 'KubernetesEngineBuilder', 
