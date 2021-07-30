@@ -44,25 +44,27 @@ pipeline {
             steps { 
                 sh '''
                     docker rmi ${DOCKER_REGISTRY}/${PROJECT_NAME}:${IMAGE_TAG}
-                    docker rmi $(docker images -f "dangling=true" -q)
                 ''' 
             }
         }
 
-        // stage('Deploy to Production') {
-        //     agent {
-        //         docker {
-        //             image 'bitnami/kubectl:latest'
-        //             label 'master'
-        //             args  '-v /mnt/config/docker-compose/dckubectl/kube/config:/.kube/config --entrypoint='
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             sed -e "s|PROJECT_NAME|${PROJECT_NAME}|g; s|PORT|${PORT}|g; s|POD_LABEL|${POD_LABEL}|g; s|REGISTRY|${DOCKER_REGISTRY}|g; s|TAG|${IMAGE_TAG}|g; s|PUBLIC_DOMAIN|${PUBLIC_DOMAIN}|g; s|PV_PATH|${PV_PATH}|g" manifest.yml | kubectl apply -f -
-        //         '''
-        //     }
-        // }
+        stage('Deploy to GKE') {
+            agent {label 'master'}
+            steps {
+                sh """
+                    sed -e "s|PROJECT_NAME|${PROJECT_NAME}|g; s|PORT|${PORT}|g; s|POD_LABEL|${POD_LABEL}|g; s|REGISTRY|${DOCKER_REGISTRY}|g; s|TAG|${IMAGE_TAG}|g" manifest.yml > manifest-new.yml
+                """
+
+                step([$class: 'KubernetesEngineBuilder', 
+                    projectId: env.GCP_PROJECT_ID,
+                    clusterName: env.GCP_CLUSTER,
+                    zone: env.GCP_ZONE,
+                    manifestPattern: 'manifest-new.yml',
+                    credentialsId: 'cre-c-gke-dev',
+                    verifyDeployments: false])               
+            }
+        }
+
     }
     
     // post {
