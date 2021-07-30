@@ -18,7 +18,7 @@ pipeline {
 
     }
 
-     stages {}        
+     stages {        
         stage('Build Image') {
             agent {label 'master'}
             steps { 
