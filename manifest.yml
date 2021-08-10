@@ -101,6 +101,9 @@ spec:
   metadata:
     name: i-PROJECT_NAME
     namespace: n-PROJECT_NAME
+    annotations:
+      kubernetes.io/ingress.global-static-ip-name: "public-static-ip-for-PROJECT_NAME"
+      kubernetes.io/ingress.allow-http: "false"
   spec:
     rules:
     - host: PUBLIC_DOMAIN
@@ -111,8 +114,9 @@ spec:
               name: s-PROJECT_NAME
               port:
                 number: PORT
-          path: /
-          pathType: Prefix
+          path: /*
+          # GKE Ingress Class only "ImplementationSpecific" path type is supported
+          pathType: ImplementationSpecific  
 
 ---
 apiVersion: v1
