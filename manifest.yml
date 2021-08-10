@@ -101,8 +101,6 @@ spec:
   metadata:
     name: i-PROJECT_NAME
     namespace: n-PROJECT_NAME
-    annotations:
-      kubernetes.io/ingress.global-static-ip-name: "public-static-ip-for-ingress-PROJECT_NAME"
   spec:
     rules:
     - host: PUBLIC_DOMAIN
