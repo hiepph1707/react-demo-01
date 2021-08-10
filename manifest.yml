@@ -1,3 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: n-PROJECT_NAME
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -95,6 +101,8 @@ spec:
   metadata:
     name: i-PROJECT_NAME
     namespace: n-PROJECT_NAME
+    annotations:
+      kubernetes.io/ingress.global-static-ip-name: "public-static-ip-for-ingress-PROJECT_NAME"
   spec:
     rules:
     - host: PUBLIC_DOMAIN
